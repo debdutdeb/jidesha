@@ -1,6 +1,6 @@
-const BASE_DOMAIN = "meet.jit.si";
+const BASE_DOMAIN = "jitsi.rocket.chat";
 const BASE_URL = "https://" + BASE_DOMAIN + "/";
-const APP_NAME = "Jitsi";
+const APP_NAME = "Rocket.Chat Jitsi";
 const NUMBER_RETRIEVE_SCRIPT = false;
 const CONFERENCE_MAPPER_SCRIPT = false;
 
@@ -42,30 +42,30 @@ class EventContainer {
      * @abstract
      * @returns {Description}
      */
-    get description() {}
+    get description() { }
 
     /**
      * The button container where we will add the jitsi button.
      * @abstract
      */
-    get buttonContainer() {}
+    get buttonContainer() { }
 
     /**
      * The location of the event.
      * @abstract
      * @returns {Location}
      */
-    get location() {}
+    get location() { }
 
     /**
      * The container element of the event edit page.
      * @returns {*}
      */
-    get container(){
+    get container() {
         return this.containerElement;
     };
 
-    set container(c){
+    set container(c) {
         this.containerElement = c;
     };
 
@@ -73,7 +73,7 @@ class EventContainer {
      * Main entry point of the event modifictaions.
      * @abstract
      */
-    update() {}
+    update() { }
 
     /**
      * Checks for the button on current page
@@ -143,7 +143,7 @@ class EventContainer {
             else
                 this.meetingId = generateRoomWithoutSeparator();
 
-            if(NUMBER_RETRIEVE_SCRIPT) {
+            if (NUMBER_RETRIEVE_SCRIPT) {
                 // queries a predefined location for settings
                 $.getJSON(NUMBER_RETRIEVE_SCRIPT,
                     jsonobj => {
@@ -153,10 +153,10 @@ class EventContainer {
                         // generate new room name
                         if (jsonobj.roomNameDictionary) {
                             this.meetingId = generateRoomWithoutSeparator(
-                                    jsonobj.roomNameDictionary);
+                                jsonobj.roomNameDictionary);
                         }
 
-                        if(!jsonobj.numbersEnabled)
+                        if (!jsonobj.numbersEnabled)
                             return;
 
                         this.numbers = jsonobj.numbers;
@@ -192,9 +192,9 @@ class EventContainer {
         container.addClass('button_container');
         container.append(
             '<div id="jitsi_button" ' +
-                'class="goog-inline-block jfk-button jfk-button-action ' +
-                    'jfk-button-clear-outline">' +
-                '<a href="#" style="color: white"></a>' +
+            'class="goog-inline-block jfk-button jfk-button-action ' +
+            'jfk-button-clear-outline">' +
+            '<a href="#" style="color: white"></a>' +
             '</div>');
         description.update(this.location);
     }
@@ -208,14 +208,14 @@ class Location {
      * The text in the location field.
      * @abstract
      */
-    get text() {}
+    get text() { }
 
     /**
      * Adds location info.
      * @abstract
      * @param text
      */
-    addLocationText(text){}
+    addLocationText(text) { }
 }
 
 /**
@@ -247,7 +247,7 @@ class Description {
                     && location.text.indexOf(LOCATION_TEXT) != -1);
         }
 
-        if(isDescriptionUpdated) {
+        if (isDescriptionUpdated) {
             // update button url of event has all the data
             this.updateButtonURL();
         } else {
@@ -297,20 +297,20 @@ class Description {
      * The description html element.
      * @abstract
      */
-    get element() {}
+    get element() { }
 
     /**
      * The text value of the description of the event.
      * @abstract
      */
-    get value() {}
+    get value() { }
 
     /**
      * Adds description text to the existing text.
      * @abstract
      * @param text
      */
-    addDescriptionText(text){}
+    addDescriptionText(text) { }
 
     /**
      * Generates description text used for the invite.
@@ -342,7 +342,7 @@ class Description {
                 });
             } else {
                 inviteText += "\n\n=====";
-                inviteText +="\n\nJust want to dial in on your phone? ";
+                inviteText += "\n\nJust want to dial in on your phone? ";
                 inviteText += " \n\nCall one of the following numbers: ";
                 Object.keys(this.event.numbers).forEach(key => {
                     let value = this.event.numbers[key];
@@ -415,7 +415,7 @@ class GEvent extends EventContainer {
         if ($('table.ep-dp-dt').is(":visible")) {
             this.updateMeetingId();
 
-            if(!this.isButtonPresent())
+            if (!this.isButtonPresent())
                 this.addJitsiButton();
         }
     }
@@ -438,14 +438,14 @@ class GEvent extends EventContainer {
         // we will create a new raw to place the button
         // this row will be after the Video Call row
         let neighbor = $(getNodeID('rtc-row'));
-        if(neighbor.length == 0)
+        if (neighbor.length == 0)
             return null;
 
         let newRowID = getNodePrefix() + '.' + 'jitsi-rtc-row';
         let newRow = $('<tr id="' + newRowID + '">' +
-                        '<th class="ep-dp-dt-th"></th>' +
-                        '<td class="ep-dp-dt-td"></td>' +
-                       '</tr>');
+            '<th class="ep-dp-dt-th"></th>' +
+            '<td class="ep-dp-dt-td"></td>' +
+            '</tr>');
         newRow.insertAfter(neighbor);
 
         return newRow.find('td');
@@ -493,7 +493,7 @@ class GLocation extends Location {
      * Adds text to location input.
      * @param text
      */
-    addLocationText(text){
+    addLocationText(text) {
         // Set the location if there is content
         var locationNode = this.elem[0];
 
@@ -564,7 +564,7 @@ class GDescription extends Description {
      * Adds text to the description.
      * @param text
      */
-    addDescriptionText(text){
+    addDescriptionText(text) {
         if (this.el.noTextArea) {
             // this is the case where description was not editable
             // so we click on the element to make it editable
@@ -642,7 +642,7 @@ class G2Event extends EventContainer {
         // we will create a new raw to place the button
         // this row will be before the notifications row
         let neighbor = $('#xNtList').parent();
-        if(neighbor.length == 0){
+        if (neighbor.length == 0) {
             return null;
         }
 
@@ -744,7 +744,7 @@ class G2Location extends Location {
      * Adds text to location input.
      * @param text
      */
-    addLocationText(text){
+    addLocationText(text) {
         let elem = this._getSelector();
 
         // in case this element is missing, means we cannot edit the text
@@ -764,11 +764,11 @@ class G2Location extends Location {
             // in some cases hovering over the input will make it save,
             // otherwise text is seen in the input but is not saved after
             // clicking save
-            window.setTimeout(function(){
+            window.setTimeout(function () {
                 locationNode.focus();
-                elem.val(elem.val()+ " ");
+                elem.val(elem.val() + " ");
                 locationNode.dispatchEvent(getKeyboardEvent('input'));
-            },1000);
+            }, 1000);
         }
     }
 }
@@ -805,7 +805,7 @@ class G2Description extends Description {
      * Adds text to the description.
      * @param text
      */
-    addDescriptionText(text){
+    addDescriptionText(text) {
         let el = this.element;
         if (el.notEditable)
             return;
@@ -887,7 +887,7 @@ class MSLiveEvent extends EventContainer {
      */
     update() {
         if ($("div[aria-label='Event compose form']").is(":visible")) {
-            if(!this.isButtonPresent()) {
+            if (!this.isButtonPresent()) {
                 this.updateMeetingId();
                 this.addJitsiButton();
             }
@@ -909,7 +909,7 @@ class MSLiveEvent extends EventContainer {
     get buttonContainer() {
         var container = $("span[id='MeetingCompose.LocationInputLabel']")
             .parent().parent();
-        if(container.length == 0)
+        if (container.length == 0)
             return null;
         return container;
     }
@@ -990,10 +990,10 @@ class MSLiveDescription extends Description {
      * Adds text to the description.
      * @param text
      */
-    addDescriptionText(text){
+    addDescriptionText(text) {
         // format link
         var urlRegex = /(https?:\/\/[^\s]+)/g;
-        let textToInsert = text.replace(urlRegex, function(url) {
+        let textToInsert = text.replace(urlRegex, function (url) {
             return '<a href="' + url + '">' + url + '</a>';
         });
 
@@ -1107,20 +1107,21 @@ function checkAndUpdateCalendar() {
         = window.MutationObserver || window.WebKitMutationObserver;
     var c = EventContainer.getInstance();
     if (c) {
-        new MutationObserver(function(mutations) {
+        new MutationObserver(function (mutations) {
             try {
-                mutations.every(function() {
+                mutations.every(function () {
                     c.update();
                 });
-            } catch(e) {
+            } catch (e) {
                 console.log(e);
             }
         }).observe(c.container, {
-            childList: true, attributes: true, characterData: false });
+            childList: true, attributes: true, characterData: false
+        });
 
         // anyway try to add the button, this is the case when directly going
         // to create event page
-        if(!c.isButtonPresent()) {
+        if (!c.isButtonPresent()) {
             // popup adds autoCreateMeeting param when open directly event
             // create page
             if (findGetParameter('autoCreateMeeting')
@@ -1133,7 +1134,7 @@ function checkAndUpdateCalendar() {
 
         // Listen for mutations (showing the bubble), for quick adding events
         var body = document.querySelector('body');
-        new MutationObserver(function() {
+        new MutationObserver(function () {
             var quickAddDialog = $('.bubble');
             if (quickAddDialog.length >= 1) {
                 // schedule execution, give time to all mutation observers
@@ -1143,7 +1144,7 @@ function checkAndUpdateCalendar() {
                     var quickAddDialogContainer
                         = $(".bubblecontent .event-create-container");
                     // skip if our button is already added
-                    if(quickAddDialogContainer.length < 1
+                    if (quickAddDialogContainer.length < 1
                         || $('#jitsi_button_quick_add').length != 0) {
                         return;
                     }
@@ -1161,20 +1162,20 @@ function checkAndUpdateCalendar() {
 
                     var jitsiQuickAddButton = $(
                         '<div class="split-tile-right" style="float:left">' +
-                            '<div class="tile-content" ' +
-                                 'style="height: 30px; line-height: 30px;position: relative;">' +
-                                '<div class="right-actions" ' +
-                                     'style="display: inline-block;float: right;margin-right: -16px;">' +
-                                    '<div id="jitsi_button_quick_add" ' +
-                                         'class="goog-inline-block jfk-button jfk-button-action jfk-button-clear-outline" ' +
-                                         'style="left: ' + (numberOfButtons > 1 ? '10' : '0') + 'px;">' +
-                                        'Add a ' + LOCATION_TEXT +
-                                    '</div>' +
-                                '</div>' +
-                            '</div>' +
+                        '<div class="tile-content" ' +
+                        'style="height: 30px; line-height: 30px;position: relative;">' +
+                        '<div class="right-actions" ' +
+                        'style="display: inline-block;float: right;margin-right: -16px;">' +
+                        '<div id="jitsi_button_quick_add" ' +
+                        'class="goog-inline-block jfk-button jfk-button-action jfk-button-clear-outline" ' +
+                        'style="left: ' + (numberOfButtons > 1 ? '10' : '0') + 'px;">' +
+                        'Add a ' + LOCATION_TEXT +
+                        '</div>' +
+                        '</div>' +
+                        '</div>' +
                         '</div>');
                     lastButtonGroup.before(jitsiQuickAddButton);
-                    jitsiQuickAddButton.on('click', function(e) {
+                    jitsiQuickAddButton.on('click', function (e) {
                         c.scheduleAutoCreateMeeting = true;
                         $('div.edit-button').click();
                     });
@@ -1182,7 +1183,7 @@ function checkAndUpdateCalendar() {
             }
         }).observe(
             body,
-            {attributes: false, childList: true, characterData: false});
+            { attributes: false, childList: true, characterData: false });
     }
 }
 
@@ -1198,7 +1199,7 @@ function checkAndUpdateCalendarG2() {
 
         // anyway try to add the button, this is the case when directly going
         // to create event page
-        if(document.querySelector('body').dataset.viewfamily === 'EVENT_EDIT'
+        if (document.querySelector('body').dataset.viewfamily === 'EVENT_EDIT'
             && !c.isButtonPresent()) {
             // popup adds autoCreateMeeting param when open directly event
             // create page
@@ -1212,7 +1213,7 @@ function checkAndUpdateCalendarG2() {
 
         // Listen for mutations (showing the bubble), for quick adding events
         var body = document.querySelector('body');
-        new MutationObserver(function(mutations) {
+        new MutationObserver(function (mutations) {
 
             // the main calendar view
             if (document.querySelector('body').dataset.viewfamily === 'EVENT') {
@@ -1270,11 +1271,11 @@ function checkAndUpdateCalendarG2() {
             }
         }).observe(
             body, {
-                attributes: false,
-                childList: true,
-                characterData: false,
-                subtree : true
-            });
+            attributes: false,
+            childList: true,
+            characterData: false,
+            subtree: true
+        });
     }
 }
 
